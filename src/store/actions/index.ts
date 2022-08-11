@@ -35,3 +35,5 @@ export type {
     SetGoToLogin,
     setUsersACType,
 } from './types';
+
+export type { LearnCardsActionType, SetLearningCardsIdType } from './types';

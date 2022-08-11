@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
     FormControl,
@@ -15,6 +15,7 @@ import { StyledButton } from 'components/header/styles';
 import { LearnCardContainer } from 'components/learnCard/LearnCardContainer';
 import { useAppDispatch, useTypedSelector } from 'hooks';
 import { UseParamsType } from 'pages/learnCard/types';
+import { setLearningCardsIdAC } from 'store/actions/learnCards';
 import { fetchCards } from 'store/middlewares';
 import { updateCardGrade } from 'store/middlewares/cards/updateCardGrade';
 import { selectSelectedPackName } from 'store/selectors/selectSelectedPackName/selectSelectedPackName';
@@ -37,6 +38,7 @@ export const LearnCard = (): ReturnComponentType => {
     const { cardsPack_id } = useParams<UseParamsType>();
 
     const cards = useTypedSelector(state => state.cards.cards);
+
     const [card, setCard] = useState({
         cardsPack_id: '',
         question: '',
@@ -54,16 +56,10 @@ export const LearnCard = (): ReturnComponentType => {
     const [first, setFirst] = useState(true);
     const [isAnsweredAll, setIsAnsweredAll] = useState(false);
 
-    // const [cardsId, setCardsId] = useState(cards.map(card => card._id));
-    let cardsId = useMemo(() => {
-        return cards.map(card => card._id);
-    }, [cards]);
-
     const currentCardId = card._id;
 
     const packName = useTypedSelector(selectSelectedPackName);
-
-    console.log(`cardsId all => ${cardsId}`);
+    let cardsId = useTypedSelector(state => state.learn.cardsId);
 
     const onNext = (): void => {
         const gradeNumber = grades.indexOf(grade) + 1;
@@ -73,6 +69,7 @@ export const LearnCard = (): ReturnComponentType => {
         setGrade('');
 
         cardsId = cardsId.filter(id => id !== currentCardId);
+        dispatch(setLearningCardsIdAC(cardsId));
 
         if (cardsId.length === 0) {
             setIsAnsweredAll(true);
@@ -81,9 +78,6 @@ export const LearnCard = (): ReturnComponentType => {
         if (cards.length > 0) {
             setCard(getRandomCard(cards));
         }
-
-        console.log(`cardsId => ${cardsId}`);
-        console.log(`currentCardId => ${currentCardId}`);
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -97,6 +91,12 @@ export const LearnCard = (): ReturnComponentType => {
     const handleTryAgain = (): void => {
         setIsAnsweredAll(false);
     };
+
+    useEffect(() => {
+        const cardsId = cards.map(card => card._id);
+
+        dispatch(setLearningCardsIdAC(cardsId));
+    }, [cards]);
 
     useEffect(() => {
         if (first) {

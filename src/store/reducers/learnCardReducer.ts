@@ -1,3 +1,4 @@
+import { SET_LEARNING_CARDS_ID } from 'store/actions/constants';
 import { LearnCardsActionType } from 'store/actions/types';
 import { LearnCardStateType } from 'store/reducers/types';
 
@@ -11,8 +12,8 @@ export const learnCardReducer = (
     action: LearnCardsActionType,
 ): LearnCardStateType => {
     switch (action.type) {
-        case 'learn/SET_LEARNING_CARDS_ID':
-            return { ...state, ...action.payload };
+        case SET_LEARNING_CARDS_ID:
+            return { ...state, cardsId: action.payload.cardsId };
         default:
             return state;
     }
