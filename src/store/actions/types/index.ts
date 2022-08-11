@@ -25,3 +25,5 @@ export type { SetSearchUserId } from './SetSearchUserId';
 export type { SetModalType } from './SetModalType';
 export type { SetModalState } from './SetModalState';
 export type { SetSearchParamsType } from './SetSearchParamsType';
+export type { SetLearningCardsIdType } from './SetLearningCardsIdType';
+export type { LearnCardsActionType } from './LearnCardsActionType';

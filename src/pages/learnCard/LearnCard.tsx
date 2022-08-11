@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import {
     FormControl,
@@ -7,7 +7,7 @@ import {
     Radio,
     RadioGroup,
 } from '@mui/material';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import s from './LearnCard.module.css';
 
@@ -32,15 +32,11 @@ const grades = [
 export const LearnCard = (): ReturnComponentType => {
     const dispatch = useAppDispatch();
 
+    const navigate = useNavigate();
+
     const { cardsPack_id } = useParams<UseParamsType>();
 
-    // const id = useTypedSelector(state => state.packs.selectedCardsPack._id);
-    const packName = useTypedSelector(selectSelectedPackName);
     const cards = useTypedSelector(state => state.cards.cards);
-
-    const [isChecked, setIsChecked] = useState<boolean>(false);
-    const [grade, setGrade] = useState(grades[0]);
-    const [first, setFirst] = useState(true);
     const [card, setCard] = useState({
         cardsPack_id: '',
         question: '',
@@ -53,23 +49,53 @@ export const LearnCard = (): ReturnComponentType => {
         rating: 0,
     });
 
+    const [isChecked, setIsChecked] = useState<boolean>(false);
+    const [grade, setGrade] = useState('');
+    const [first, setFirst] = useState(true);
+    const [isAnsweredAll, setIsAnsweredAll] = useState(false);
+
+    // const [cardsId, setCardsId] = useState(cards.map(card => card._id));
+    let cardsId = useMemo(() => {
+        return cards.map(card => card._id);
+    }, [cards]);
+
+    const currentCardId = card._id;
+
+    const packName = useTypedSelector(selectSelectedPackName);
+
+    console.log(`cardsId all => ${cardsId}`);
+
     const onNext = (): void => {
-        console.log(card);
         const gradeNumber = grades.indexOf(grade) + 1;
 
         setIsChecked(false);
-
         dispatch(updateCardGrade(gradeNumber, card._id));
-
         setGrade('');
+
+        cardsId = cardsId.filter(id => id !== currentCardId);
+
+        if (cardsId.length === 0) {
+            setIsAnsweredAll(true);
+        }
 
         if (cards.length > 0) {
             setCard(getRandomCard(cards));
         }
+
+        console.log(`cardsId => ${cardsId}`);
+        console.log(`currentCardId => ${currentCardId}`);
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         setGrade((event.target as HTMLInputElement).value);
+    };
+
+    const handleNavigateToPack = (): void => {
+        navigate('/packs');
+    };
+
+    const handleTryAgain = (): void => {
+        setIsAnsweredAll(false);
     };
 
     useEffect(() => {
@@ -83,7 +109,31 @@ export const LearnCard = (): ReturnComponentType => {
         if (cards.length > 0) {
             setCard(getRandomCard(cards));
         }
-    }, [cards, dispatch, first]);
+    }, [cards, dispatch, first, cardsPack_id]);
+
+    if (isAnsweredAll) {
+        return (
+            <LearnCardContainer title={packName || ''}>
+                <h3 className={s.center}> You answered all questions!</h3>
+                <StyledButton
+                    className={s.btn}
+                    variant="contained"
+                    color="primary"
+                    onClick={handleNavigateToPack}
+                >
+                    Back to packs
+                </StyledButton>
+                <StyledButton
+                    className={s.btn}
+                    variant="contained"
+                    color="primary"
+                    onClick={handleTryAgain}
+                >
+                    Try again
+                </StyledButton>
+            </LearnCardContainer>
+        );
+    }
 
     if (cards.length === 0) {
         return (

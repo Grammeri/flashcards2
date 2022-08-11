@@ -28,3 +28,4 @@ export const SET_IS_MY_CARDS = 'cards/SET_IS_MY_CARDS';
 export const SET_SELECTED_CARDS_PACK = 'packs/SET_SELECTED_CARDS_PACK';
 export const SET_UPDATED_GRADE = 'cards/SET_UPDATED_GRADE';
 export const SET_SLIDER = 'packs/SET_SLIDER';
+export const SET_LEARNING_CARDS_ID = 'learn/SET_LEARNING_CARDS_ID';

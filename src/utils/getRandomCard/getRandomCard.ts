@@ -17,7 +17,7 @@ export const getRandomCard = (cards: CardsType[]): CardsType => {
         { sum: 0, id: -1 },
     );
 
-    console.log('test: ', sum, rand, res);
+    // console.log('test: ', sum, rand, res);
 
     return cards[res.id + 1];
 };

@@ -66,6 +66,7 @@ beforeEach(() => {
             isMyPack: false,
         },
         cards: {} as GetCardsType,
+        learn: { cardsId: [], currentCardId: '' },
     };
 });
 
