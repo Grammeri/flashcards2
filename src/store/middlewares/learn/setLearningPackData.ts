@@ -4,25 +4,26 @@ import { CardsType, LearnCardType } from 'api/types/cards/GetCardType/GetCardsTy
 import { REQUEST_STATUS } from 'enums';
 import { setAppStatusAC } from 'store/actions';
 import {
-    setCardsFromPackAC,
     setCurrentLearningCardIdAC,
     setLearningCardAC,
     setLearningCardsIdAC,
 } from 'store/actions/learnCards';
+import { fetchCards } from 'store/middlewares/cards/fetchCards';
 import { AppThunkType } from 'store/types';
 import { errorHandler } from 'utils';
 
 export const setLearningPackData =
-    (card: LearnCardType, cards: CardsType[]): AppThunkType =>
+    (card: LearnCardType, cards: CardsType[], cardsPack_id: string): AppThunkType =>
     async dispatch => {
         try {
             const cardsIdList = cards.map(card => card._id);
 
             dispatch(setAppStatusAC(REQUEST_STATUS.LOADING));
 
+            dispatch(fetchCards(cardsPack_id));
+
             dispatch(setLearningCardAC(card));
             dispatch(setCurrentLearningCardIdAC(card._id));
-            dispatch(setCardsFromPackAC(cards));
             dispatch(setLearningCardsIdAC(cardsIdList));
         } catch (e) {
             errorHandler(e as Error | AxiosError, dispatch);

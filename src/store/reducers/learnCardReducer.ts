@@ -1,9 +1,11 @@
 import {
     REMOVE_CURRENT_ID_FROM_ID_LIST,
+    SET_CARDS,
     SET_CARDS_FROM_PACK,
     SET_CURRENT_LEARNING_CARDS_ID,
     SET_LEARNING_CARD,
     SET_LEARNING_CARDS_ID,
+    SET_UPDATED_GRADE,
 } from 'store/actions/constants';
 import { LearnCardsActionType } from 'store/actions/types';
 import { LearnCardStateType } from 'store/reducers/types';
@@ -52,6 +54,26 @@ export const learnCardReducer = (
                 ...state,
                 cardsFromPack: action.payload.cards,
             };
+        case SET_CARDS:
+            return {
+                ...state,
+                cardsFromPack: action.payload.data.cards,
+                cardsId: action.payload.data.cards.map(card => card._id),
+            };
+        case SET_UPDATED_GRADE:
+            return {
+                ...state,
+                cardsFromPack: state.cardsFromPack.map(card =>
+                    card._id === action.payload.updatedCard.updatedGrade.card_id
+                        ? {
+                              ...card,
+                              ...action.payload.updatedCard.updatedGrade,
+                              _id: action.payload.updatedCard.updatedGrade.card_id,
+                          }
+                        : card,
+                ),
+            };
+
         default:
             return state;
     }

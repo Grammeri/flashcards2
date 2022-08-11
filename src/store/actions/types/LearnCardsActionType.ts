@@ -1,3 +1,4 @@
+import { setCardsAC, setUpdatedGradeAC } from 'store/actions/cards';
 import {
     removeCurrentIdFromIdListAC,
     setCurrentLearningCardIdAC,
@@ -11,4 +12,6 @@ export type LearnCardsActionType =
     | ReturnType<typeof setCurrentLearningCardIdAC>
     | ReturnType<typeof removeCurrentIdFromIdListAC>
     | ReturnType<typeof setLearningCardAC>
-    | ReturnType<typeof setCardsFromPackAC>;
+    | ReturnType<typeof setCardsFromPackAC>
+    | ReturnType<typeof setCardsAC>
+    | ReturnType<typeof setUpdatedGradeAC>;
