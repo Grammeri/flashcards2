@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
-import {
-    FormControl,
-    FormControlLabel,
-    FormLabel,
-    Radio,
-    RadioGroup,
-} from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import s from './LearnCard.module.css';
 
 import { StyledButton } from 'components/header/styles';
 import { LearnCardContainer } from 'components/learnCard/LearnCardContainer';
+import { LearnCardRadio } from 'components/learnCardRadio/LearnCardRadio';
 import { useAppDispatch, useTypedSelector } from 'hooks';
 import { UseParamsType } from 'pages/learnCard/types';
 import {
@@ -171,28 +165,11 @@ export const LearnCard = (): ReturnComponentType => {
                             Answer:<span className={s.answer}>{card.answer}</span>
                         </h3>
                         <hr />
-                        <FormControl>
-                            <FormLabel id="demo-radio-buttons-group-label">
-                                Rate yourself:
-                            </FormLabel>
-                            <RadioGroup
-                                aria-labelledby="grades"
-                                name="grade"
-                                value={grade}
-                                onChange={handleChange}
-                            >
-                                {grades.map(grade => {
-                                    return (
-                                        <FormControlLabel
-                                            key={`${grade}key`}
-                                            value={grade}
-                                            control={<Radio />}
-                                            label={grade}
-                                        />
-                                    );
-                                })}
-                            </RadioGroup>
-                        </FormControl>
+                        <LearnCardRadio
+                            grade={grade}
+                            handleChange={handleChange}
+                            grades={grades}
+                        />
                         <StyledButton
                             className={s.btn}
                             variant="contained"
