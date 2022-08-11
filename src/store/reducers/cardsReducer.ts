@@ -67,7 +67,11 @@ export const cardsReducer = (
                 ...state,
                 cards: state.cards.map(card =>
                     card._id === action.payload.updatedCard.updatedGrade.card_id
-                        ? { ...card, ...action.payload.updatedCard.updatedGrade }
+                        ? {
+                              ...card,
+                              ...action.payload.updatedCard.updatedGrade,
+                              _id: action.payload.updatedCard.updatedGrade.card_id,
+                          }
                         : card,
                 ),
             };

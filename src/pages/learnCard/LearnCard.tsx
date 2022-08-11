@@ -34,7 +34,7 @@ export const LearnCard = (): ReturnComponentType => {
 
     const { cardsPack_id } = useParams<UseParamsType>();
 
-    const id = useTypedSelector(state => state.packs.selectedCardsPack._id);
+    // const id = useTypedSelector(state => state.packs.selectedCardsPack._id);
     const packName = useTypedSelector(selectSelectedPackName);
     const cards = useTypedSelector(state => state.cards.cards);
 
@@ -54,6 +54,7 @@ export const LearnCard = (): ReturnComponentType => {
     });
 
     const onNext = (): void => {
+        console.log(card);
         const gradeNumber = grades.indexOf(grade) + 1;
 
         setIsChecked(false);
@@ -68,7 +69,6 @@ export const LearnCard = (): ReturnComponentType => {
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-        console.log(event.target.value);
         setGrade((event.target as HTMLInputElement).value);
     };
 
@@ -83,7 +83,7 @@ export const LearnCard = (): ReturnComponentType => {
         if (cards.length > 0) {
             setCard(getRandomCard(cards));
         }
-    }, [id, cards, dispatch, first]);
+    }, [cards, dispatch, first]);
 
     if (cards.length === 0) {
         return (
