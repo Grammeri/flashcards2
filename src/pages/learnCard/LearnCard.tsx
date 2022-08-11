@@ -7,6 +7,7 @@ import s from './LearnCard.module.css';
 import { StyledButton } from 'components/header/styles';
 import { LearnCardContainer } from 'components/learnCard/LearnCardContainer';
 import { LearnCardRadio } from 'components/learnCardRadio/LearnCardRadio';
+import { LearnCardRestartAnswer } from 'components/learnCardRestartAnswer/LearnCardRestartAnswer';
 import { useAppDispatch, useTypedSelector } from 'hooks';
 import { UseParamsType } from 'pages/learnCard/types';
 import {
@@ -122,25 +123,11 @@ export const LearnCard = (): ReturnComponentType => {
 
     if (isAnsweredAll && card._id !== '') {
         return (
-            <LearnCardContainer title={packName || ''}>
-                <h3 className={s.center}> You answered all questions!</h3>
-                <StyledButton
-                    className={s.btn}
-                    variant="contained"
-                    color="primary"
-                    onClick={handleNavigateToPack}
-                >
-                    Back to packs
-                </StyledButton>
-                <StyledButton
-                    className={s.btn}
-                    variant="contained"
-                    color="primary"
-                    onClick={handleTryAgain}
-                >
-                    Try again
-                </StyledButton>
-            </LearnCardContainer>
+            <LearnCardRestartAnswer
+                packName={packName}
+                handleNavigateToPack={handleNavigateToPack}
+                handleTryAgain={handleTryAgain}
+            />
         );
     }
 
