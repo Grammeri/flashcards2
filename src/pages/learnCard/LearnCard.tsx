@@ -4,10 +4,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import s from './LearnCard.module.css';
 
-import { StyledButton } from 'components/header/styles';
 import { LearnCardContainer } from 'components/learnCard/LearnCardContainer';
+import { LearnCardBody } from 'components/learnCardBody/LearnCardBody';
 import { LearnCardHeader } from 'components/learnCardHeader/LearnCardHeader';
-import { LearnCardRadio } from 'components/learnCardRadio/LearnCardRadio';
 import { LearnCardRestartAnswer } from 'components/learnCardRestartAnswer/LearnCardRestartAnswer';
 import { useAppDispatch, useTypedSelector } from 'hooks';
 import { UseParamsType } from 'pages/learnCard/types';
@@ -143,38 +142,15 @@ export const LearnCard = (): ReturnComponentType => {
     return (
         <LearnCardContainer title={packName || ''}>
             <LearnCardHeader question={card.question} shots={card.shots} />
-            <div>
-                {showAnswer ? (
-                    <div className={s.answerContainer}>
-                        <h3 className={s.question}>
-                            Answer:<span className={s.answer}>{card.answer}</span>
-                        </h3>
-                        <hr />
-                        <LearnCardRadio
-                            grade={grade}
-                            handleChange={handleChange}
-                            grades={grades}
-                        />
-                        <StyledButton
-                            className={s.btn}
-                            variant="contained"
-                            color="primary"
-                            onClick={onNext}
-                        >
-                            Next question
-                        </StyledButton>
-                    </div>
-                ) : (
-                    <StyledButton
-                        className={s.btn}
-                        variant="contained"
-                        color="primary"
-                        onClick={() => setShowAnswer(true)}
-                    >
-                        Show answer
-                    </StyledButton>
-                )}
-            </div>
+            <LearnCardBody
+                showAnswer={showAnswer}
+                answer={card.answer}
+                grade={grade}
+                grades={grades}
+                handleChange={handleChange}
+                onNext={onNext}
+                setShowAnswer={setShowAnswer}
+            />
         </LearnCardContainer>
     );
 };
