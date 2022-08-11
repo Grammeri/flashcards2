@@ -16,15 +16,13 @@ export const setLearningPackData =
     (card: LearnCardType, cards: CardsType[], cardsPack_id: string): AppThunkType =>
     async dispatch => {
         try {
-            const cardsIdList = cards.map(card => card._id);
-
             dispatch(setAppStatusAC(REQUEST_STATUS.LOADING));
 
             dispatch(fetchCards(cardsPack_id));
 
             dispatch(setLearningCardAC(card));
             dispatch(setCurrentLearningCardIdAC(card._id));
-            dispatch(setLearningCardsIdAC(cardsIdList));
+            dispatch(setLearningCardsIdAC());
         } catch (e) {
             errorHandler(e as Error | AxiosError, dispatch);
         } finally {

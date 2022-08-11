@@ -33,7 +33,7 @@ export const learnCardReducer = (
 ): LearnCardStateType => {
     switch (action.type) {
         case SET_LEARNING_CARDS_ID:
-            return { ...state, cardsId: action.payload.cardsId };
+            return { ...state, cardsId: state.cardsFromPack.map(card => card._id) };
         case SET_CURRENT_LEARNING_CARDS_ID:
             return {
                 ...state,

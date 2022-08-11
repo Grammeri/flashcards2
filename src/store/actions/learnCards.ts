@@ -14,10 +14,9 @@ import {
     SetLearningCardType,
 } from 'store/actions/types';
 
-export const setLearningCardsIdAC = (cardsId: string[]): SetLearningCardsIdType => {
+export const setLearningCardsIdAC = (): SetLearningCardsIdType => {
     return {
         type: SET_LEARNING_CARDS_ID,
-        payload: { cardsId },
     };
 };
 

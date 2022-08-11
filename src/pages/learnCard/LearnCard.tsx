@@ -14,6 +14,7 @@ import {
     removeCurrentIdFromIdListAC,
     setCurrentLearningCardIdAC,
     setLearningCardAC,
+    setLearningCardsIdAC,
 } from 'store/actions/learnCards';
 import { fetchCards } from 'store/middlewares';
 import { updateCardGrade } from 'store/middlewares/cards/updateCardGrade';
@@ -30,8 +31,6 @@ const grades = [
 ];
 
 export const LearnCard = (): ReturnComponentType => {
-    console.log(`learnCard rendered`);
-
     const dispatch = useAppDispatch();
 
     const navigate = useNavigate();
@@ -62,9 +61,9 @@ export const LearnCard = (): ReturnComponentType => {
     const [isAnsweredAll, setIsAnsweredAll] = useState(false);
 
     const onNext = (): void => {
-        // console.log(`cardsIdList => ${cardsIdList}`);
-        // console.log(`currentCardId => ${currentCardId}`);
-        // console.log(card);
+        console.log(`cardsIdList => ${cardsIdList}`);
+        console.log(`currentCardId => ${currentCardId}`);
+        console.log(card);
         const gradeNumber = grades.indexOf(grade) + 1;
 
         dispatch(updateCardGrade(gradeNumber, card._id));
@@ -88,10 +87,10 @@ export const LearnCard = (): ReturnComponentType => {
 
     const handleTryAgain = (): void => {
         setIsAnsweredAll(false);
+        dispatch(setLearningCardsIdAC());
     };
 
     useEffect(() => {
-        console.log('first useEffect');
         if (first) {
             if (cardsPack_id) {
                 dispatch(fetchCards(cardsPack_id));
