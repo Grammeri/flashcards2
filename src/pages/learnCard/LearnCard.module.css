@@ -53,6 +53,11 @@ div.container {
     margin-top: 30px;
 }
 
+.buttonGroup {
+    display: flex;
+    justify-content: space-evenly;
+}
+
 .wrapper {
     padding: 30px;
     display: flex;

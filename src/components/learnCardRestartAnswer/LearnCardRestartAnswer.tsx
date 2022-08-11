@@ -20,22 +20,24 @@ export const LearnCardRestartAnswer = React.memo(
         return (
             <LearnCardContainer title={packName || ''}>
                 <h3 className={s.center}> You answered all questions!</h3>
-                <StyledButton
-                    className={s.btn}
-                    variant="contained"
-                    color="primary"
-                    onClick={handleNavigateToPack}
-                >
-                    Back to packs
-                </StyledButton>
-                <StyledButton
-                    className={s.btn}
-                    variant="contained"
-                    color="primary"
-                    onClick={handleTryAgain}
-                >
-                    Try again
-                </StyledButton>
+                <div className={s.buttonGroup}>
+                    <StyledButton
+                        className={s.btn}
+                        variant="outlined"
+                        color="primary"
+                        onClick={handleNavigateToPack}
+                    >
+                        Back to packs
+                    </StyledButton>
+                    <StyledButton
+                        className={s.btn}
+                        variant="outlined"
+                        color="primary"
+                        onClick={handleTryAgain}
+                    >
+                        Try again
+                    </StyledButton>
+                </div>
             </LearnCardContainer>
         );
     },
