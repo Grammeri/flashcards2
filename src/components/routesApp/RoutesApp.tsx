@@ -30,7 +30,7 @@ export const RoutesApp = (): ReturnComponentType => {
                     <Route path="profile" element={<Profile />} />
                     <Route path="password_recovery/:token" element={<SetNewPassword />} />
                     <Route path="enter_new_password" element={<ForgotPassword />} />
-                    <Route path="learn/:card_id" element={<LearnCard />} />
+                    <Route path="learn/:cardsPack_id" element={<LearnCard />} />
                     <Route
                         path="404"
                         element={<img alt="Error 404" src={errorImage} />}

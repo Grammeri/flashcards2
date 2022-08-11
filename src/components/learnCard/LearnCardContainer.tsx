@@ -4,14 +4,14 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Container } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
-import { LearnCardType } from 'components/learnCard/LearnCardType';
+import { LearnCardTypes } from 'components/learnCard/types';
 import s from 'pages/learnCard/LearnCard.module.css';
 import { ReturnComponentType } from 'types';
 
 export const LearnCardContainer = ({
     children,
     title,
-}: LearnCardType): ReturnComponentType => {
+}: LearnCardTypes): ReturnComponentType => {
     return (
         <Container className={s.container}>
             <NavLink to="/packs" className={s.breadcrumbs}>

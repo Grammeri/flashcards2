@@ -7,12 +7,14 @@ import {
     Radio,
     RadioGroup,
 } from '@mui/material';
+import { useParams } from 'react-router-dom';
 
 import s from './LearnCard.module.css';
 
 import { StyledButton } from 'components/header/styles';
 import { LearnCardContainer } from 'components/learnCard/LearnCardContainer';
 import { useAppDispatch, useTypedSelector } from 'hooks';
+import { UseParamsType } from 'pages/learnCard/types';
 import { fetchCards } from 'store/middlewares';
 import { updateCardGrade } from 'store/middlewares/cards/updateCardGrade';
 import { selectSelectedPackName } from 'store/selectors/selectSelectedPackName/selectSelectedPackName';
@@ -29,6 +31,8 @@ const grades = [
 
 export const LearnCard = (): ReturnComponentType => {
     const dispatch = useAppDispatch();
+
+    const { cardsPack_id } = useParams<UseParamsType>();
 
     const id = useTypedSelector(state => state.packs.selectedCardsPack._id);
     const packName = useTypedSelector(selectSelectedPackName);
@@ -56,6 +60,8 @@ export const LearnCard = (): ReturnComponentType => {
 
         dispatch(updateCardGrade(gradeNumber, card._id));
 
+        setGrade('');
+
         if (cards.length > 0) {
             setCard(getRandomCard(cards));
         }
@@ -68,8 +74,10 @@ export const LearnCard = (): ReturnComponentType => {
 
     useEffect(() => {
         if (first) {
-            dispatch(fetchCards(id));
-            setFirst(false);
+            if (cardsPack_id) {
+                dispatch(fetchCards(cardsPack_id));
+                setFirst(false);
+            }
         }
 
         if (cards.length > 0) {

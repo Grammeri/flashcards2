@@ -1,6 +1,6 @@
 import React from 'react';
 
-export type LearnCardType = {
+export type LearnCardTypes = {
     children?: React.ReactNode;
     title: string;
 };
