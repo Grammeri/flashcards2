@@ -45,3 +45,15 @@ export type UpdatedGradeType = {
     token: string;
     tokenDeathTime: number;
 };
+
+export type LearnCardType = {
+    cardsPack_id: string;
+    question: string;
+    answer: string;
+    grade: number;
+    shots: number;
+    user_id: string;
+    _id: string;
+    type: string;
+    rating: number;
+};

@@ -1,4 +1,5 @@
 import { AuthUserDataType, CardType, GetCardsType } from 'api/types';
+import { CardsType } from 'api/types/cards/GetCardType/GetCardsType';
 import { REQUEST_STATUS } from 'enums';
 import {
     selectAppStatus,
@@ -66,7 +67,12 @@ beforeEach(() => {
             isMyPack: false,
         },
         cards: {} as GetCardsType,
-        learn: { cardsId: [], currentCardId: '' },
+        learn: {
+            cardsId: [],
+            currentCardId: '',
+            currentCard: {} as CardsType,
+            cardsFromPack: [],
+        },
     };
 });
 

@@ -27,3 +27,7 @@ export type { SetModalState } from './SetModalState';
 export type { SetSearchParamsType } from './SetSearchParamsType';
 export type { SetLearningCardsIdType } from './SetLearningCardsIdType';
 export type { LearnCardsActionType } from './LearnCardsActionType';
+export type { SetCurrentIdType } from './SetCurrentIdType';
+export type { RemoveCurrentIdFromIdListType } from './RemoveCurrentIdFromIdListType';
+export type { SetLearningCardType } from './SetLearningCardType';
+export type { SetCardsFromPackType } from './SetCardsFromPackType';

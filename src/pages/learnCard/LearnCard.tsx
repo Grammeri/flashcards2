@@ -7,7 +7,7 @@ import {
     Radio,
     RadioGroup,
 } from '@mui/material';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import s from './LearnCard.module.css';
 
@@ -15,9 +15,9 @@ import { StyledButton } from 'components/header/styles';
 import { LearnCardContainer } from 'components/learnCard/LearnCardContainer';
 import { useAppDispatch, useTypedSelector } from 'hooks';
 import { UseParamsType } from 'pages/learnCard/types';
-import { setLearningCardsIdAC } from 'store/actions/learnCards';
 import { fetchCards } from 'store/middlewares';
 import { updateCardGrade } from 'store/middlewares/cards/updateCardGrade';
+import { setLearningPackData } from 'store/middlewares/learn/setLearningPackData';
 import { selectSelectedPackName } from 'store/selectors/selectSelectedPackName/selectSelectedPackName';
 import { ReturnComponentType } from 'types';
 import { getRandomCard } from 'utils/getRandomCard/getRandomCard';
@@ -31,13 +31,17 @@ const grades = [
 ];
 
 export const LearnCard = (): ReturnComponentType => {
-    const dispatch = useAppDispatch();
+    console.log(`learnCard rendered`);
 
-    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
     const { cardsPack_id } = useParams<UseParamsType>();
 
     const cards = useTypedSelector(state => state.cards.cards);
+    const packName = useTypedSelector(selectSelectedPackName);
+
+    const cardsIdList = useTypedSelector(state => state.learn.cardsId);
+    const currentCardId = useTypedSelector(state => state.learn.currentCardId);
 
     const [card, setCard] = useState({
         cardsPack_id: '',
@@ -54,26 +58,18 @@ export const LearnCard = (): ReturnComponentType => {
     const [isChecked, setIsChecked] = useState<boolean>(false);
     const [grade, setGrade] = useState('');
     const [first, setFirst] = useState(true);
-    const [isAnsweredAll, setIsAnsweredAll] = useState(false);
+    // const [isAnsweredAll, setIsAnsweredAll] = useState(false);
 
-    const currentCardId = card._id;
-
-    const packName = useTypedSelector(selectSelectedPackName);
-    let cardsId = useTypedSelector(state => state.learn.cardsId);
+    console.log(`cardsIdList => ${cardsIdList}`);
+    console.log(`currentCardId => ${currentCardId}`);
 
     const onNext = (): void => {
         const gradeNumber = grades.indexOf(grade) + 1;
 
-        setIsChecked(false);
         dispatch(updateCardGrade(gradeNumber, card._id));
+
+        setIsChecked(false);
         setGrade('');
-
-        cardsId = cardsId.filter(id => id !== currentCardId);
-        dispatch(setLearningCardsIdAC(cardsId));
-
-        if (cardsId.length === 0) {
-            setIsAnsweredAll(true);
-        }
 
         if (cards.length > 0) {
             setCard(getRandomCard(cards));
@@ -84,19 +80,13 @@ export const LearnCard = (): ReturnComponentType => {
         setGrade((event.target as HTMLInputElement).value);
     };
 
-    const handleNavigateToPack = (): void => {
-        navigate('/packs');
-    };
-
-    const handleTryAgain = (): void => {
-        setIsAnsweredAll(false);
-    };
-
-    useEffect(() => {
-        const cardsId = cards.map(card => card._id);
-
-        dispatch(setLearningCardsIdAC(cardsId));
-    }, [cards]);
+    // const handleNavigateToPack = (): void => {
+    //     navigate('/packs');
+    // };
+    //
+    // const handleTryAgain = (): void => {
+    //     setIsAnsweredAll(false);
+    // };
 
     useEffect(() => {
         if (first) {
@@ -111,29 +101,33 @@ export const LearnCard = (): ReturnComponentType => {
         }
     }, [cards, dispatch, first, cardsPack_id]);
 
-    if (isAnsweredAll) {
-        return (
-            <LearnCardContainer title={packName || ''}>
-                <h3 className={s.center}> You answered all questions!</h3>
-                <StyledButton
-                    className={s.btn}
-                    variant="contained"
-                    color="primary"
-                    onClick={handleNavigateToPack}
-                >
-                    Back to packs
-                </StyledButton>
-                <StyledButton
-                    className={s.btn}
-                    variant="contained"
-                    color="primary"
-                    onClick={handleTryAgain}
-                >
-                    Try again
-                </StyledButton>
-            </LearnCardContainer>
-        );
-    }
+    useEffect(() => {
+        dispatch(setLearningPackData(card, cards));
+    }, [card, cards]);
+
+    // if (isAnsweredAll) {
+    //     return (
+    //         <LearnCardContainer title={packName || ''}>
+    //             <h3 className={s.center}> You answered all questions!</h3>
+    //             <StyledButton
+    //                 className={s.btn}
+    //                 variant="contained"
+    //                 color="primary"
+    //                 onClick={handleNavigateToPack}
+    //             >
+    //                 Back to packs
+    //             </StyledButton>
+    //             <StyledButton
+    //                 className={s.btn}
+    //                 variant="contained"
+    //                 color="primary"
+    //                 onClick={handleTryAgain}
+    //             >
+    //                 Try again
+    //             </StyledButton>
+    //         </LearnCardContainer>
+    //     );
+    // }
 
     if (cards.length === 0) {
         return (
