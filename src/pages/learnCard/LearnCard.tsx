@@ -6,6 +6,7 @@ import s from './LearnCard.module.css';
 
 import { StyledButton } from 'components/header/styles';
 import { LearnCardContainer } from 'components/learnCard/LearnCardContainer';
+import { LearnCardHeader } from 'components/learnCardHeader/LearnCardHeader';
 import { LearnCardRadio } from 'components/learnCardRadio/LearnCardRadio';
 import { LearnCardRestartAnswer } from 'components/learnCardRestartAnswer/LearnCardRestartAnswer';
 import { useAppDispatch, useTypedSelector } from 'hooks';
@@ -141,10 +142,7 @@ export const LearnCard = (): ReturnComponentType => {
 
     return (
         <LearnCardContainer title={packName || ''}>
-            <p className={s.description}>Number of replies: {card.shots}</p>
-            <h3 className={s.question}>
-                Question: <span className={s.answer}>{card.question}</span>
-            </h3>
+            <LearnCardHeader question={card.question} shots={card.shots} />
             <div>
                 {showAnswer ? (
                     <div className={s.answerContainer}>
