@@ -1,6 +1,6 @@
-import { SET_SLIDER } from 'store/actions/constants';
+// import { SET_SLIDER } from 'store/actions/constants';
 
 export type SetSliderType = {
-    type: typeof SET_SLIDER;
+    type: 'SET_SLIDER';
     payload: { min: number; max: number };
 };

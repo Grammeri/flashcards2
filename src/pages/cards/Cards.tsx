@@ -12,6 +12,7 @@ import {
     SelectChangeEvent,
     TextField,
 } from '@mui/material';
+import ReactModal from 'react-modal';
 import { NavLink, useParams } from 'react-router-dom';
 
 import s from './Cards.module.css';
@@ -39,6 +40,7 @@ import {
 import { ReturnComponentType } from 'types';
 import { NewCard } from 'utils/newCardCreator/newCardCreator';
 
+ReactModal.setAppElement('#root');
 export const Cards = (): ReturnComponentType => {
     const dispatch = useAppDispatch();
 
@@ -52,6 +54,7 @@ export const Cards = (): ReturnComponentType => {
     const pageCount = useTypedSelector(selectCardsPageCount);
     const cardsTotalCount = useTypedSelector(selectCardsTotalCount);
 
+    const [isOpen, setIsOpen] = useState<boolean>(false);
     const [value, setValue] = useState<string>('');
     const debouncedValue = useDebounce<string>(value, DELAY);
 
@@ -113,7 +116,9 @@ export const Cards = (): ReturnComponentType => {
                 title={currentPuckName}
                 buttonName="Add new card"
                 isButtonNeed
-                callback={addNewCard}
+                callback={() => {
+                    setIsOpen(true);
+                }}
                 disabled={disabled}
             >
                 <TextField
@@ -131,6 +136,41 @@ export const Cards = (): ReturnComponentType => {
                     }}
                 />
             </CardsTopContent>
+
+            <ReactModal
+                isOpen={isOpen}
+                onRequestClose={() => {
+                    setIsOpen(false);
+                }}
+                style={{
+                    overlay: {
+                        backgroundColor: 'grey',
+                    },
+                    content: {
+                        color: 'orange',
+                    },
+                }}
+            >
+                <button onClick={addNewCard} type="button">
+                    Add new card
+                </button>
+                <span>
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setIsOpen(false);
+                        }}
+                    >
+                        X
+                    </button>
+                </span>
+                <h4>Choose a question format</h4>
+                <input type="text" />
+                <h4>Question</h4>
+                <h2>How This works in JavaScript</h2>
+                <h4>Answer</h4>
+                <h2>This is how This works in JavaScript</h2>
+            </ReactModal>
             <CardsList
                 cards={cards}
                 cardsPack_id={cardsPack_id || ''}
