@@ -13,7 +13,12 @@ import {
     TableHead,
     TableRow,
     TableSortLabel,
+    TextField,
 } from '@mui/material';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
 import ReactModal from 'react-modal';
 
 import s from './CardList.module.css';
@@ -34,6 +39,18 @@ const UPDATE_FIELD_NAME = 'updated';
 const GRADE_SORT_BTN_ID = 'gradeSortBtn';
 const GRADE_FIELD_NAME = 'grade';
 
+const style = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
+
 ReactModal.setAppElement('#root');
 export const CardsList = ({
     cards,
@@ -42,8 +59,8 @@ export const CardsList = ({
 }: CardsListPropsType): ReturnComponentType => {
     const dispatch = useAppDispatch();
 
-    const [editIsOpen, setEditIsOpen] = useState<boolean>(false);
-    const [deleteIsOpen, setDeleteIsOpen] = useState<boolean>(false);
+    const [editOpen, setEditOpen] = useState<boolean>(false);
+    const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
 
     const [updateDirection, setUpdateDirection] = useState<OrderDirectionType>('asc');
     const [gradeDirection, setGradeDirection] = useState<OrderDirectionType>('asc');
@@ -94,10 +111,12 @@ export const CardsList = ({
         // hardcode //
 
         dispatch(updateCard(updatedCard));
+        setEditOpen(false);
     };
 
     const deleteCardHandler = (cardId: string): void => {
         dispatch(deleteCard(cardId));
+        setDeleteOpen(false);
     };
 
     if (cards.length === 0) {
@@ -168,91 +187,115 @@ export const CardsList = ({
                                     <TableCell className={s.controls}>
                                         <ModeEditOutlineOutlinedIcon
                                             className={`${s.editBtn} ${s.btn} ${disableClass}`}
-                                            onClick={() => editCardHandler(card)}
+                                            onClick={() => setEditOpen(true)}
                                         />
-                                        <ReactModal
-                                            isOpen={editIsOpen}
-                                            onRequestClose={() => {
-                                                setEditIsOpen(false);
-                                            }}
-                                            style={{
-                                                overlay: {
-                                                    backgroundColor: 'grey',
-                                                },
-                                                content: {
-                                                    color: 'orange',
-                                                },
-                                            }}
+                                        <Modal
+                                            open={editOpen}
+                                            onClose={() => setEditOpen(true)}
+                                            aria-labelledby="modal-modal-title"
+                                            aria-describedby="modal-modal-description"
                                         >
-                                            <h2>Edit card</h2>
-                                            <span>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => {
-                                                        setEditIsOpen(false);
+                                            <Box sx={style}>
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        justifyContent: 'space-between',
                                                     }}
                                                 >
-                                                    X
-                                                </button>
-                                            </span>
-                                            <h4>Choose a question format</h4>
-                                            <input type="text" />
-                                            <h4>Question</h4>
-                                            <h2>How This works in JavaScript</h2>
-                                            <h4>Answer</h4>
-                                            <h2>This is how This works in JavaScript</h2>
-                                        </ReactModal>
+                                                    <Typography
+                                                        id="modal-modal-title"
+                                                        variant="h6"
+                                                        component="h2"
+                                                    >
+                                                        Edit card
+                                                    </Typography>
 
+                                                    <Button
+                                                        variant="contained"
+                                                        onClick={() => {
+                                                            setEditOpen(false);
+                                                        }}
+                                                    >
+                                                        X
+                                                    </Button>
+                                                </div>
+
+                                                <TextField
+                                                    id="standard-basic"
+                                                    label="New name"
+                                                    variant="standard"
+                                                />
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        margin: '30px',
+                                                        justifyContent: 'space-between',
+                                                    }}
+                                                >
+                                                    <Button
+                                                        variant="contained"
+                                                        onClick={() =>
+                                                            editCardHandler(card)
+                                                        }
+                                                    >
+                                                        Save
+                                                    </Button>
+                                                </div>
+                                            </Box>
+                                        </Modal>
                                         <DeleteOutlineOutlinedIcon
                                             className={`${s.deleteBtn} ${s.btn} ${disableClass}`}
-                                            onClick={() => setDeleteIsOpen(false)}
+                                            onClick={() => setDeleteOpen(true)}
                                         />
-                                        <ReactModal
-                                            isOpen={deleteIsOpen}
-                                            onRequestClose={() => {
-                                                setDeleteIsOpen(false);
-                                            }}
-                                            style={{
-                                                overlay: {
-                                                    backgroundColor: 'grey',
-                                                },
-                                                content: {
-                                                    color: 'orange',
-                                                },
-                                            }}
+                                        <Modal
+                                            open={deleteOpen}
+                                            onClose={() => setDeleteOpen(true)}
+                                            aria-labelledby="modal-modal-title"
+                                            aria-describedby="modal-modal-description"
                                         >
-                                            <h2>Delete Card</h2>
-                                            <span>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => {
-                                                        setDeleteIsOpen(false);
+                                            <Box sx={style}>
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        justifyContent: 'space-between',
                                                     }}
                                                 >
-                                                    X
-                                                </button>
-                                            </span>
-                                            <h4>
-                                                Do you really want to remove Card Name?
-                                            </h4>
-                                            <h4>All cards will be deleted</h4>
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                    setDeleteIsOpen(false);
-                                                }}
-                                            >
-                                                Cancel
-                                            </button>
-                                            <button
-                                                type="button"
-                                                onClick={() =>
-                                                    deleteCardHandler(card._id)
-                                                }
-                                            >
-                                                Delete
-                                            </button>
-                                        </ReactModal>
+                                                    <Typography
+                                                        id="modal-modal-title"
+                                                        variant="h6"
+                                                        component="h2"
+                                                    >
+                                                        Delete card
+                                                    </Typography>
+
+                                                    <Button
+                                                        variant="contained"
+                                                        onClick={() => {
+                                                            setDeleteOpen(false);
+                                                        }}
+                                                    >
+                                                        X
+                                                    </Button>
+                                                </div>
+
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        margin: '30px',
+                                                        justifyContent: 'space-between',
+                                                    }}
+                                                >
+                                                    <button
+                                                        type="button"
+                                                        onClick={() =>
+                                                            deleteCardHandler(card._id)
+                                                        }
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </Box>
+                                        </Modal>
                                     </TableCell>
                                 </TableRow>
                             );
@@ -263,3 +306,61 @@ export const CardsList = ({
         </Paper>
     );
 };
+
+/// /////////////////////////
+/*
+<ReactModal
+    isOpen={editIsOpen}
+    onRequestClose={() => {
+        setEditIsOpen(false);
+    }}
+    style={{
+        overlay: {
+            backgroundColor: 'grey',
+        },
+        content: {
+            color: 'orange',
+        },
+    }}
+>
+    <h2>Edit card</h2>
+    <span>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setEditIsOpen(false);
+                                                    }}
+                                                >
+                                                    X
+                                                </button>
+                                            </span>
+    <h4>Choose a question format</h4>
+    <input type="text" />
+    <h4>Question</h4>
+    <input
+        type="text"
+        value=""
+        placeholder="Questions"
+    />
+    <h4>Answer</h4>
+    <input
+        type="text"
+        value=""
+        placeholder="Answers"
+    />
+    <div />
+    <button
+        onClick={() => editCardHandler(card)}
+        type="button"
+    >
+        Save
+    </button>
+    <button
+        type="button"
+        onClick={() => {
+            setEditIsOpen(false);
+        }}
+    >
+        Cancel
+    </button>
+</ReactModal> */
