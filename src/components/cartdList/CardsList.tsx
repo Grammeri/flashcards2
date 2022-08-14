@@ -285,14 +285,14 @@ export const CardsList = ({
                                                         justifyContent: 'space-between',
                                                     }}
                                                 >
-                                                    <button
-                                                        type="button"
+                                                    <Button
+                                                        variant="contained"
                                                         onClick={() =>
                                                             deleteCardHandler(card._id)
                                                         }
                                                     >
                                                         Delete
-                                                    </button>
+                                                    </Button>
                                                 </div>
                                             </Box>
                                         </Modal>

@@ -71,6 +71,8 @@ export const Cards = (): ReturnComponentType => {
 
     const [open, setOpen] = useState<boolean>(false);
     const [value, setValue] = useState<string>('');
+    const [cardName, setCardName] = useState<string>('');
+    const [answerName, setAnswerName] = useState<string>('');
     const debouncedValue = useDebounce<string>(value, DELAY);
 
     const currentPuck = packs.find(pack => pack._id === cardsPack_id);
@@ -85,15 +87,15 @@ export const Cards = (): ReturnComponentType => {
     const addNewCard = (): void => {
         const newCard: CardsType = NewCard();
 
-        setOpen(false);
-
         // hardcode //
         newCard.grade = 0;
-        newCard.question = 'new card';
-        newCard.answer = 'some answer';
+        newCard.question = cardName;
+        newCard.answer = answerName;
         // hardcode //
 
         dispatch(createCard({ ...newCard }));
+        setOpen(false);
+        setAnswerName('');
     };
 
     const searchInputHandler = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -182,9 +184,24 @@ export const Cards = (): ReturnComponentType => {
 
                         <TextField
                             id="standard-basic"
-                            label="New name"
+                            label="Name your new card"
                             variant="standard"
+                            value={cardName}
+                            onChange={e => {
+                                setCardName(e.currentTarget.value);
+                            }}
                         />
+
+                        <TextField
+                            id="standard-basic"
+                            label="Name your answer"
+                            variant="standard"
+                            value={answerName}
+                            onChange={e => {
+                                setAnswerName(e.currentTarget.value);
+                            }}
+                        />
+
                         <div
                             style={{
                                 display: 'flex',
