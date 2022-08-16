@@ -13,12 +13,12 @@ import {
     TableHead,
     TableRow,
     TableSortLabel,
-    TextField,
 } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
+import { useForm } from 'react-hook-form';
 import ReactModal from 'react-modal';
 
 import s from './CardList.module.css';
@@ -57,10 +57,23 @@ export const CardsList = ({
     cardsPack_id,
     disabled,
 }: CardsListPropsType): ReturnComponentType => {
+    const {
+        register,
+        formState: { isValid },
+        handleSubmit,
+        reset,
+    } = useForm<{ question: string; answer: string }>({
+        mode: 'onBlur',
+    });
+
     const dispatch = useAppDispatch();
 
     const [editOpen, setEditOpen] = useState<boolean>(false);
     const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+    const [editCard, setEditCard] = useState<CardsType>({
+        question: '',
+        answer: '',
+    } as CardsType);
 
     const [updateDirection, setUpdateDirection] = useState<OrderDirectionType>('asc');
     const [gradeDirection, setGradeDirection] = useState<OrderDirectionType>('asc');
@@ -102,16 +115,25 @@ export const CardsList = ({
         }
     };
 
-    const editCardHandler = (card: CardsType): void => {
+    const onSubmit = (data: { question: string; answer: string }): void => {
+        /* alert(JSON.stringify(data)); */
+        editCardHandler(data);
+    };
+    const handleCardEdit = (card: CardsType): void => {
+        setEditCard(card);
+        setEditOpen(true);
+    };
+    const editCardHandler = (data: { question: string; answer: string }): void => {
         // hardcode //
-        const updatedCard = { ...card };
+        const updatedCard = { ...editCard };
 
-        updatedCard.question = 'updated question';
-        updatedCard.answer = 'updated answer';
+        updatedCard.question = data.question;
+        updatedCard.answer = data.answer;
         // hardcode //
 
         dispatch(updateCard(updatedCard));
         setEditOpen(false);
+        reset();
     };
 
     const deleteCardHandler = (cardId: string): void => {
@@ -187,7 +209,9 @@ export const CardsList = ({
                                     <TableCell className={s.controls}>
                                         <ModeEditOutlineOutlinedIcon
                                             className={`${s.editBtn} ${s.btn} ${disableClass}`}
-                                            onClick={() => setEditOpen(true)}
+                                            onClick={() => {
+                                                handleCardEdit(card);
+                                            }}
                                         />
                                         <Modal
                                             open={editOpen}
@@ -220,7 +244,7 @@ export const CardsList = ({
                                                     </Button>
                                                 </div>
 
-                                                <TextField
+                                                {/* <TextField
                                                     id="standard-basic"
                                                     label="New name"
                                                     variant="standard"
@@ -240,7 +264,50 @@ export const CardsList = ({
                                                     >
                                                         Save
                                                     </Button>
-                                                </div>
+                                                </div> */}
+                                                <form onSubmit={handleSubmit(onSubmit)}>
+                                                    <input
+                                                        placeholder="Edit your card"
+                                                        {...register('question', {
+                                                            required:
+                                                                'Edit your card, Body!',
+                                                        })}
+                                                    />
+                                                    <div style={{ height: 40 }}>
+                                                        {/*                                                        {{errors?.question && (*!/
+                                                        {    <p>*!/
+                                                        {       {errors?.editedQuestion*!/
+                                                        {            ?.message || 'Error!'}}
+                                                        {   </p>*!/
+                                                        )} */}
+                                                    </div>
+                                                    <input
+                                                        /* onChange={e => {
+                                                            setEditCard(state => ({
+                                                                ...state,
+                                                                answer: e.currentTarget
+                                                                    .value,
+                                                            }));
+                                                        }} */
+                                                        placeholder="Edit your answer"
+                                                        {...register('answer', {
+                                                            required:
+                                                                'Edit your answer, Body!',
+                                                        })}
+                                                    />
+                                                    {/*                                                    <div style={{ height: 40 }}>
+                                                        {errors?.answer && (
+                                                            <p>
+                                                                {errors?.editedAnswer
+                                                                    ?.message || 'Error!'}
+                                                            </p>
+                                                        )}
+                                                    </div> */}
+                                                    <input
+                                                        type="submit"
+                                                        disabled={!isValid}
+                                                    />
+                                                </form>
                                             </Box>
                                         </Modal>
                                         <DeleteOutlineOutlinedIcon
@@ -308,59 +375,13 @@ export const CardsList = ({
 };
 
 /// /////////////////////////
-/*
-<ReactModal
-    isOpen={editIsOpen}
-    onRequestClose={() => {
-        setEditIsOpen(false);
-    }}
-    style={{
-        overlay: {
-            backgroundColor: 'grey',
-        },
-        content: {
-            color: 'orange',
-        },
-    }}
->
-    <h2>Edit card</h2>
-    <span>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => {
-                                                        setEditIsOpen(false);
-                                                    }}
-                                                >
-                                                    X
-                                                </button>
-                                            </span>
-    <h4>Choose a question format</h4>
-    <input type="text" />
-    <h4>Question</h4>
-    <input
-        type="text"
-        value=""
-        placeholder="Questions"
-    />
-    <h4>Answer</h4>
-    <input
-        type="text"
-        value=""
-        placeholder="Answers"
-    />
-    <div />
-    <button
-        onClick={() => editCardHandler(card)}
-        type="button"
-    >
-        Save
-    </button>
-    <button
-        type="button"
-        onClick={() => {
-            setEditIsOpen(false);
-        }}
-    >
-        Cancel
-    </button>
-</ReactModal> */
+/* const editCardHandler = (card: CardsType): void => {
+    // hardcode //
+    const updatedCard = { ...card };
+
+    updatedCard.question = 'updated question';
+    updatedCard.answer = 'updated answer';
+    // hardcode //
+
+    dispatch(updateCard(updatedCard));
+}; */

@@ -15,7 +15,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
-import { FieldValues, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { NavLink, useParams } from 'react-router-dom';
 
 import s from './Cards.module.css';
@@ -58,10 +58,10 @@ const style = {
 export const Cards = (): ReturnComponentType => {
     const {
         register,
-        formState: { errors, isValid },
+        formState: { /* errors, */ isValid },
         handleSubmit,
         reset,
-    } = useForm({
+    } = useForm<{ question: string; answer: string }>({
         mode: 'onBlur',
     });
 
@@ -79,8 +79,6 @@ export const Cards = (): ReturnComponentType => {
 
     const [open, setOpen] = useState<boolean>(false);
     const [value, setValue] = useState<string>('');
-    /* const [cardName, setCardName] = useState<string>('');
-    const [answerName, setAnswerName] = useState<string>(''); */
     const debouncedValue = useDebounce<string>(value, DELAY);
 
     const currentPuck = packs.find(pack => pack._id === cardsPack_id);
@@ -92,30 +90,23 @@ export const Cards = (): ReturnComponentType => {
 
     const disabled = userId !== packUserId;
 
-    const onSubmit = (data: FieldValues): void => {
+    const onSubmit = (data: { question: string; answer: string }): void => {
         alert(JSON.stringify(data));
         addNewCard(data);
         reset();
     };
 
-    const addNewCard = (data: FieldValues): void => {
+    const addNewCard = (data: { question: string; answer: string }): void => {
         const newCard: CardsType = NewCard();
 
         // hardcode //
         newCard.grade = 0;
-        newCard.question = data.cardName;
-        newCard.answer = data.answerName;
+        newCard.question = data.question;
+        newCard.answer = data.answer;
         // hardcode //
 
         dispatch(createCard({ ...newCard }));
         setOpen(false);
-        /* setAnswerName('');
-        if (cardName !== '') {
-            setCardName('');
-        }
-        if (answerName !== '') {
-            setAnswerName('');
-        } */
     };
 
     const searchInputHandler = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -197,27 +188,31 @@ export const Cards = (): ReturnComponentType => {
                         </Button>
                     </div>
                     <form onSubmit={handleSubmit(onSubmit)}>
-                        <input
-                            placeholder="Name your card"
-                            {...register('cardName', {
-                                required: 'Name your card, Body!',
-                            })}
-                        />
                         <div style={{ height: 40 }}>
-                            {errors?.cardName && (
-                                <p>{errors?.cardName?.message || 'Error!'}</p>
+                            <input
+                                placeholder="Name your card"
+                                {...register('question', {
+                                    required: 'Name your card, Body!',
+                                })}
+                            />
+                            {/*                        <div style={{ height: 40 }}>
+                            {errors?.question && (
+                                <p>{errors?.question?.message || 'Error!'}</p>
                             )}
+                        </div> */}
                         </div>
-                        <input
-                            placeholder="Name your answer"
-                            {...register('answerName', {
-                                required: 'Name your answer, Body!',
-                            })}
-                        />
                         <div style={{ height: 40 }}>
+                            <input
+                                placeholder="Name your answer"
+                                {...register('answer', {
+                                    required: 'Name your answer, Body!',
+                                })}
+                            />
+                            {/*                        <div style={{ height: 40 }}>
                             {errors?.answer && (
-                                <p>{errors?.answerName?.message || 'Error!'}</p>
+                                <p>{errors?.answer?.message || 'Error!'}</p>
                             )}
+                        </div> */}
                         </div>
                         <input type="submit" disabled={!isValid} />
                     </form>
