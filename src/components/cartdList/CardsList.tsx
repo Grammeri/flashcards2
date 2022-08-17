@@ -70,11 +70,11 @@ export const CardsList = ({
 
     const [editOpen, setEditOpen] = useState<boolean>(false);
     const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
-    const [editCard, setEditCard] = useState<CardsType>({
+    const [editedCard, seteditedCard] = useState<CardsType>({
         question: '',
         answer: '',
     } as CardsType);
-
+    const [deleteCardId, setDeleteCardId] = useState('');
     const [updateDirection, setUpdateDirection] = useState<OrderDirectionType>('asc');
     const [gradeDirection, setGradeDirection] = useState<OrderDirectionType>('asc');
 
@@ -117,15 +117,15 @@ export const CardsList = ({
 
     const onSubmit = (data: { question: string; answer: string }): void => {
         /* alert(JSON.stringify(data)); */
-        editCardHandler(data);
+        editedCardHandler(data);
     };
     const handleCardEdit = (card: CardsType): void => {
-        setEditCard(card);
+        seteditedCard(card);
         setEditOpen(true);
     };
-    const editCardHandler = (data: { question: string; answer: string }): void => {
+    const editedCardHandler = (data: { question: string; answer: string }): void => {
         // hardcode //
-        const updatedCard = { ...editCard };
+        const updatedCard = { ...editedCard };
 
         updatedCard.question = data.question;
         updatedCard.answer = data.answer;
@@ -136,8 +136,8 @@ export const CardsList = ({
         reset();
     };
 
-    const deleteCardHandler = (cardId: string): void => {
-        dispatch(deleteCard(cardId));
+    const deleteCardHandler = (): void => {
+        dispatch(deleteCard(deleteCardId));
         setDeleteOpen(false);
     };
 
@@ -190,6 +190,7 @@ export const CardsList = ({
                                     sx={{
                                         '&:last-child td, &:last-child th': { border: 0 },
                                     }}
+                                    onClick={() => console.log(card)}
                                     hover
                                 >
                                     <TableCell component="th" scope="row">
@@ -244,27 +245,6 @@ export const CardsList = ({
                                                     </Button>
                                                 </div>
 
-                                                {/* <TextField
-                                                    id="standard-basic"
-                                                    label="New name"
-                                                    variant="standard"
-                                                />
-                                                <div
-                                                    style={{
-                                                        display: 'flex',
-                                                        margin: '30px',
-                                                        justifyContent: 'space-between',
-                                                    }}
-                                                >
-                                                    <Button
-                                                        variant="contained"
-                                                        onClick={() =>
-                                                            editCardHandler(card)
-                                                        }
-                                                    >
-                                                        Save
-                                                    </Button>
-                                                </div> */}
                                                 <form onSubmit={handleSubmit(onSubmit)}>
                                                     <input
                                                         placeholder="Edit your card"
@@ -283,7 +263,7 @@ export const CardsList = ({
                                                     </div>
                                                     <input
                                                         /* onChange={e => {
-                                                            setEditCard(state => ({
+                                                            seteditedCard(state => ({
                                                                 ...state,
                                                                 answer: e.currentTarget
                                                                     .value,
@@ -312,7 +292,10 @@ export const CardsList = ({
                                         </Modal>
                                         <DeleteOutlineOutlinedIcon
                                             className={`${s.deleteBtn} ${s.btn} ${disableClass}`}
-                                            onClick={() => setDeleteOpen(true)}
+                                            onClick={() => {
+                                                setDeleteCardId(card._id);
+                                                setDeleteOpen(true);
+                                            }}
                                         />
                                         <Modal
                                             open={deleteOpen}
@@ -354,9 +337,9 @@ export const CardsList = ({
                                                 >
                                                     <Button
                                                         variant="contained"
-                                                        onClick={() =>
-                                                            deleteCardHandler(card._id)
-                                                        }
+                                                        onClick={() => {
+                                                            deleteCardHandler();
+                                                        }}
                                                     >
                                                         Delete
                                                     </Button>
@@ -375,7 +358,7 @@ export const CardsList = ({
 };
 
 /// /////////////////////////
-/* const editCardHandler = (card: CardsType): void => {
+/* const editedCardHandler = (card: CardsType): void => {
     // hardcode //
     const updatedCard = { ...card };
 
